@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<h1>Welcome to INDEXasdf</h1>
+		<a href="/page2">go to page 2</a>
+		<button id="installButton" style="display: none;">Add to Home Screen</button>
+
+	</main>
+</Layout>
+<script is:inline>
+	console.log('this is inline')
+	let deferredPrompt = undefined;
+	window.addEventListener('beforeinstallprompt', (e) => {
+		// e.preventDefault();
+		deferredPrompt = e;
+		console.log('prompt deferred')
+		document.getElementById('installButton').style.display = 'block';
+	});
+	document.getElementById('installButton').addEventListener('click', () => {
+		if (deferredPrompt) {
+			console.log('prompting prompt')
+			deferredPrompt.prompt();
+			deferredPrompt.userChoice.then((choiceResult) => {
+			if (choiceResult.outcome === 'accepted') {
+				console.log('PWA added to home screen');
+			}
+			deferredPrompt = null;
+			});
+		}
+	});
+</script>
+
+<style>
+	body {
+		background-color: #333;
+	}
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		color: white;
+		font-size: 20px;
+		line-height: 1.6;
+	}
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+</style>
